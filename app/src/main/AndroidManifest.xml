@@ -28,6 +28,7 @@
             android:name=".UI.AddVacation"
             android:exported="false"
             android:label="AddVacation"
+            android:parentActivityName=".UI.Vacations"
             android:theme="@style/Theme.VacationsRUs" />
         <activity
             android:name=".UI.MainActivity"

@@ -17,7 +17,7 @@ public class Vacations extends AppCompatActivity {
         setContentView(R.layout.activity_vacations);
         FloatingActionButton vacationsFloatingActionButton = findViewById(R.id.vacationsFloatingActionButton);
 
-        vacationsFloatingActionButton.setOnClickListener(new View.OnClickListener(){;
+        vacationsFloatingActionButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Vacations.this, AddVacation.class);

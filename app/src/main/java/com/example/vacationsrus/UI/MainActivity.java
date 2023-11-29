@@ -18,15 +18,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button vacationsButton = findViewById(R.id.goToVacationsButton);
         Button excursionsButton = findViewById(R.id.goToExcursionsButton);
-        vacationsButton.setOnClickListener(new View.OnClickListener(){;
-        @Override
+        vacationsButton.setOnClickListener(new View.OnClickListener(){
+            @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, Vacations.class);
             startActivity(intent);
         }
         });
 
-        excursionsButton.setOnClickListener(new View.OnClickListener(){;
+        excursionsButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Excursions.class);
