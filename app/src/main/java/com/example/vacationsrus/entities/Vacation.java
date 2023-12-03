@@ -2,11 +2,6 @@ package com.example.vacationsrus.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
-import com.example.vacationsrus.DateConverter;
-
-import java.util.Date;
 
 @Entity(tableName = "vacations")
 public class Vacation {
@@ -14,13 +9,13 @@ public class Vacation {
     private int vacationID;
     private String vacationTitle;
     private String vacationHotel;
-    @TypeConverters(DateConverter.class)
-    private Date vacationStartDate;
-    @TypeConverters(DateConverter.class)
-    private Date vacationEndDate;
+
+    private int vacationStartDate;
+
+    private int vacationEndDate;
     private int excursionID;
 
-    public Vacation(int vacationID, String vacationTitle, String vacationHotel, Date vacationStartDate, Date vacationEndDate, int excursionID) {
+    public Vacation(int vacationID, String vacationTitle, String vacationHotel, int vacationStartDate, int vacationEndDate, int excursionID) {
         this.vacationID = vacationID;
         this.vacationTitle = vacationTitle;
         this.vacationHotel = vacationHotel;
@@ -53,19 +48,19 @@ public class Vacation {
         this.vacationHotel = vacationHotel;
     }
 
-    public Date getVacationStartDate() {
+    public int getVacationStartDate() {
         return vacationStartDate;
     }
 
-    public void setVacationStartDate(Date vacationStartDate) {
+    public void setVacationStartDate(int vacationStartDate) {
         this.vacationStartDate = vacationStartDate;
     }
 
-    public Date getVacationEndDate() {
+    public int getVacationEndDate() {
         return vacationEndDate;
     }
 
-    public void setVacationEndDate(Date vacationEndDate) {
+    public void setVacationEndDate(int vacationEndDate) {
         this.vacationEndDate = vacationEndDate;
     }
 
