@@ -38,7 +38,7 @@ public class Repository {
             throw new RuntimeException(e);
         }
 
-        return getmAllVacations();
+        return mAllVacations;
     }
 
     public List<Excursion>getmAllExcursions() {
@@ -52,7 +52,7 @@ public class Repository {
             throw new RuntimeException(e);
         }
 
-        return getmAllExcursions();
+        return mAllExcursions;
     }
 
     public void insert(Vacation vacation) {
