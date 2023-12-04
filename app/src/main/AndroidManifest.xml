@@ -13,6 +13,11 @@
         android:theme="@style/Theme.VacationsRUs"
         tools:targetApi="31">
         <activity
+            android:name=".UI.VacationDetails"
+            android:exported="false"
+            android:label="Vacation Details"
+            android:parentActivityName=".UI.Vacations"/>
+        <activity
             android:name=".UI.Vacations"
             android:exported="false"
             android:label="Vacations"
