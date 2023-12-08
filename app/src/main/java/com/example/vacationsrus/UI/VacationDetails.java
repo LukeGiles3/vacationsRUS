@@ -59,6 +59,16 @@ public class VacationDetails extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button vacationsDetailsDeleteButton = findViewById(R.id.buttonDetailsDelete);
+        vacationsDetailsDeleteButton.setOnClickListener(view -> {
+            repository = new Repository(getApplication());
+            Vacation vacation = repository.getVacationByID(vacationID);
+            repository.delete(vacation);
+            Toast.makeText(getApplicationContext(), "Vacation deleted", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(VacationDetails.this, Vacations.class);
+            startActivity(intent);
+        });
+
     }
 }
 
