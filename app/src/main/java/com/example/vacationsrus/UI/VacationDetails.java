@@ -1,58 +1,65 @@
 package com.example.vacationsrus.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.vacationsrus.R;
-
+import com.example.vacationsrus.dao.VacationDAO;
 import com.example.vacationsrus.database.Repository;
+import com.example.vacationsrus.entities.Vacation;
 
 public class VacationDetails extends AppCompatActivity {
     String vacationTitle;
     String vacationHotel;
     int vacationID;
-    int vacationStartDate;
-    int vacationEndDate;
+    String vacationStartDate;
+    String vacationEndDate;
     int excursionID;
     EditText editTitle;
     EditText editHotel;
     EditText editStartDate;
     EditText editEndDate;
     Repository repository;
+    VacationDAO vacationDAO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vacation_details);
+
         vacationTitle = getIntent().getStringExtra("title");
         vacationID = getIntent().getIntExtra("id", 1);
+        System.out.println(vacationID);
         vacationHotel = getIntent().getStringExtra("hotel");
-        vacationStartDate = getIntent().getIntExtra("startDate", 01/01/2023);
-        vacationEndDate = getIntent().getIntExtra("endDate", 01/01/2023);
+        vacationStartDate = getIntent().getStringExtra("startDate");
+        vacationEndDate = getIntent().getStringExtra("endDate");
         editTitle = findViewById(R.id.editTextTitle1);
         editTitle.setText(vacationTitle);
         editHotel = findViewById(R.id.editTextHotel1);
         editHotel.setText(vacationHotel);
         editStartDate = findViewById(R.id.editTextStartDate1);
-        editStartDate.setText(Integer.toString(vacationStartDate));
+        editStartDate.setText(vacationStartDate);
         editEndDate = findViewById(R.id.editTextEndDate1);
-        editEndDate.setText(Integer.toString(vacationEndDate));
+        editEndDate.setText(vacationEndDate);
 
-        repository = new Repository(getApplication());
+        Button vacationsDetailsSaveButton = findViewById(R.id.buttonDetailsSave);
+        vacationsDetailsSaveButton.setOnClickListener(view -> {
+            repository = new Repository(getApplication());
+            Vacation vacation = repository.getVacationByID(vacationID);
+            vacation.setVacationTitle(editTitle.getText().toString());
+            vacation.setVacationHotel(editHotel.getText().toString());
+            vacation.setVacationStartDate(editStartDate.getText().toString());
+            vacation.setVacationEndDate(editEndDate.getText().toString());
+            repository.update(vacation);
+            Toast.makeText(getApplicationContext(), "Vacation updated", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(VacationDetails.this, Vacations.class);
+            startActivity(intent);
+        });
+
     }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
-        return true;
-    }
-
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//    }
 }
 
 
