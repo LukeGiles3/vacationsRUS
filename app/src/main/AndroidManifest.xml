@@ -18,6 +18,11 @@
             android:label="Vacation Details"
             android:parentActivityName=".UI.Vacations"/>
         <activity
+            android:name=".UI.ExcursionDetails"
+            android:exported="false"
+            android:label="Excursion Details"
+            android:parentActivityName=".UI.Vacations"/>
+        <activity
             android:name=".UI.Vacations"
             android:exported="false"
             android:label="Vacations"
@@ -32,8 +37,14 @@
         <activity
             android:name=".UI.AddVacation"
             android:exported="false"
-            android:label="AddVacation"
+            android:label="Add Vacation"
             android:parentActivityName=".UI.Vacations"
+            android:theme="@style/Theme.VacationsRUs" />
+        <activity
+            android:name=".UI.AddExcursion"
+            android:exported="false"
+            android:label="Add Excursion"
+            android:parentActivityName=".UI.Excursions"
             android:theme="@style/Theme.VacationsRUs" />
         <activity
             android:name=".UI.MainActivity"

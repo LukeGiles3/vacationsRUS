@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.vacationsrus.entities.Title;
 import com.example.vacationsrus.entities.Vacation;
 
 import java.util.List;
@@ -27,5 +28,8 @@ public interface VacationDAO {
 
     @Query("SELECT * FROM VACATIONS WHERE vacationID = :id")
     Vacation getVacationByID(int id);
+
+    @Query("SELECT vacationTitle FROM VACATIONS ORDER BY vacationID ASC")
+    List<Title> getAllVacationTitles();
 
 }

@@ -34,7 +34,7 @@ public class Vacations extends AppCompatActivity {
 
         repository = new Repository(getApplication());
         List<Vacation> allVacations = repository.getmAllVacations();
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.vacationRecyclerView);
         final VacationAdapter vacationAdapter = new VacationAdapter(this);
         recyclerView.setAdapter(vacationAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -57,7 +57,7 @@ public class Vacations extends AppCompatActivity {
             vacation = new Vacation( "Mexico", "Mexico Hotel", "02/02/2024", "02/12/2024", 2);
             repo.insert(vacation);
             List<Vacation> allVacations = repository.getmAllVacations();
-            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            RecyclerView recyclerView = findViewById(R.id.vacationRecyclerView);
             final VacationAdapter vacationAdapter = new VacationAdapter(this);
             recyclerView.setAdapter(vacationAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -74,7 +74,7 @@ public class Vacations extends AppCompatActivity {
 
         super.onResume();
         List<Vacation> allVacations = repository.getmAllVacations();
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.vacationRecyclerView);
         final VacationAdapter vacationAdapter = new VacationAdapter(this);
         recyclerView.setAdapter(vacationAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

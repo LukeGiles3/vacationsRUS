@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.vacationsrus.dao.ExcursionDAO;
 import com.example.vacationsrus.dao.VacationDAO;
 import com.example.vacationsrus.entities.Excursion;
+import com.example.vacationsrus.entities.Title;
 import com.example.vacationsrus.entities.Vacation;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class Repository {
     private List<Excursion> mAllExcursions;
     private List<Vacation> mAllVacations;
     private Vacation mOneVacation;
+    private List<Title> mAllVacationTitles;
 
     private static int NUMBER_OF_THREADS=4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -40,6 +42,20 @@ public class Repository {
         }
 
         return mAllVacations;
+    }
+
+    public List<Title> getmAllVacationTitles() {
+        databaseExecutor.execute(()->{
+            mAllVacationTitles=mVacationDAO.getAllVacationTitles();
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mAllVacationTitles;
     }
 
     public Vacation getVacationByID(int vacationID) {

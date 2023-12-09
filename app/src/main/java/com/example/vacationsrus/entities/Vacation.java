@@ -9,9 +9,7 @@ public class Vacation {
     private int vacationID;
     private String vacationTitle;
     private String vacationHotel;
-
     private String vacationStartDate;
-
     private String vacationEndDate;
     private int excursionID;
 

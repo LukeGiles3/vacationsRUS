@@ -8,12 +8,15 @@ public class Excursion {
     @PrimaryKey(autoGenerate = true)
     private int excursionID;
     private String excursionTitle;
-    private String excursionDate;
+    private String excursionStartDate;
+    private String excursionEndDate;
+    private int productID;
 
-    public Excursion(int excursionID, String excursionTitle, String excursionDate) {
-        this.excursionID = excursionID;
+    public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int productID) {
         this.excursionTitle = excursionTitle;
-        this.excursionDate = excursionDate;
+        this.excursionStartDate = excursionStartDate;
+        this.excursionEndDate = excursionEndDate;
+        this.productID = productID;
     }
 
     public int getExcursionID() {
@@ -32,11 +35,27 @@ public class Excursion {
         this.excursionTitle = excursionTitle;
     }
 
-    public String getExcursionDate() {
-        return excursionDate;
+    public String getExcursionStartDate() {
+        return excursionStartDate;
     }
 
-    public void setExcursionDate(String excursionDate) {
-        this.excursionDate = excursionDate;
+    public void setExcursionStartDate(String excursionStartDate) {
+        this.excursionStartDate = excursionStartDate;
+    }
+
+    public String getExcursionEndDate() {
+        return excursionEndDate;
+    }
+
+    public void setExcursionEndDate(String excursionEndDate) {
+        this.excursionEndDate = excursionEndDate;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 }
