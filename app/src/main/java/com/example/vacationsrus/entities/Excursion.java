@@ -10,13 +10,13 @@ public class Excursion {
     private String excursionTitle;
     private String excursionStartDate;
     private String excursionEndDate;
-    private int productID;
+    private int vacationID;
 
-    public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int productID) {
+    public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int vacationID) {
         this.excursionTitle = excursionTitle;
         this.excursionStartDate = excursionStartDate;
         this.excursionEndDate = excursionEndDate;
-        this.productID = productID;
+        this.vacationID = vacationID;
     }
 
     public int getExcursionID() {
@@ -51,11 +51,11 @@ public class Excursion {
         this.excursionEndDate = excursionEndDate;
     }
 
-    public int getProductID() {
-        return productID;
+    public int getVacationID() {
+        return vacationID;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public void setVacationID(int vacationID) {
+        this.vacationID = vacationID;
     }
 }

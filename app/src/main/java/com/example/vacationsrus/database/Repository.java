@@ -2,10 +2,10 @@ package com.example.vacationsrus.database;
 
 import android.app.Application;
 
+import androidx.lifecycle.LiveData;
 import com.example.vacationsrus.dao.ExcursionDAO;
 import com.example.vacationsrus.dao.VacationDAO;
 import com.example.vacationsrus.entities.Excursion;
-import com.example.vacationsrus.entities.Title;
 import com.example.vacationsrus.entities.Vacation;
 
 import java.util.List;
@@ -19,7 +19,8 @@ public class Repository {
     private List<Excursion> mAllExcursions;
     private List<Vacation> mAllVacations;
     private Vacation mOneVacation;
-    private List<Title> mAllVacationTitles;
+    private LiveData<List<String>> mAllVacationTitles;
+    private int mVacationID;
 
     private static int NUMBER_OF_THREADS=4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -44,7 +45,7 @@ public class Repository {
         return mAllVacations;
     }
 
-    public List<Title> getmAllVacationTitles() {
+    public LiveData<List<String>> getmAllVacationTitles() {
         databaseExecutor.execute(()->{
             mAllVacationTitles=mVacationDAO.getAllVacationTitles();
         });
@@ -156,5 +157,19 @@ public class Repository {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int getVacationIdByTitle(String selectedVacationTitle) {
+        databaseExecutor.execute(()->{
+            mVacationID=mVacationDAO.getVacationIDByTitle(selectedVacationTitle);
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mVacationID;
     }
 }

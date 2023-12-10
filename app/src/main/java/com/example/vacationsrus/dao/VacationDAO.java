@@ -1,5 +1,6 @@
 package com.example.vacationsrus.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -7,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.vacationsrus.entities.Title;
 import com.example.vacationsrus.entities.Vacation;
 
 import java.util.List;
@@ -30,6 +30,8 @@ public interface VacationDAO {
     Vacation getVacationByID(int id);
 
     @Query("SELECT vacationTitle FROM VACATIONS ORDER BY vacationID ASC")
-    List<Title> getAllVacationTitles();
+    LiveData<List<String>> getAllVacationTitles();
 
+    @Query("SELECT vacationID FROM VACATIONS WHERE vacationTitle = :title")
+    int getVacationIDByTitle(String title);
 }

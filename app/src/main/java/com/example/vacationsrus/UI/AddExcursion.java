@@ -11,13 +11,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.vacationsrus.DateValidation;
 import com.example.vacationsrus.DateValidator;
 import com.example.vacationsrus.R;
 import com.example.vacationsrus.database.Repository;
 import com.example.vacationsrus.entities.Excursion;
-import com.example.vacationsrus.entities.Title;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,8 +33,7 @@ public class AddExcursion extends AppCompatActivity {
     String excursionTitleText;
     String excursionStartDateText;
     String excursionEndDateText;
-    List<Title> vacationsArray;
-    int excursionVacationIDInt;
+    int selectedVacationID;
     Date excursionStartDateDate;
     Date excursionEndDateDate;
     DateValidator dateValidator;
@@ -46,10 +46,26 @@ public class AddExcursion extends AppCompatActivity {
 
         excursionVacationID = findViewById(R.id.dropDownAddVacation);
         repository = new Repository(getApplication());
-        vacationsArray = repository.getmAllVacationTitles();
-        ArrayAdapter ad = new ArrayAdapter(this, android.R.layout.simple_spinner_item, vacationsArray);
-        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        excursionVacationID.setAdapter(ad);
+        repository.getmAllVacationTitles().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> vacationTitles) {
+                ArrayAdapter<String> ad = new ArrayAdapter<>(AddExcursion.this, android.R.layout.simple_spinner_item, vacationTitles);
+                ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                excursionVacationID.setAdapter(ad);
+                excursionVacationID.setSelection(0);
+            }
+
+        });
+        excursionVacationID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedVacationTitle = parentView.getItemAtPosition(position).toString();
+                selectedVacationID = repository.getVacationIdByTitle(selectedVacationTitle);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
 
         dateValidator = new DateValidation();
         Button excursionSubmitButton = findViewById(R.id.addExcursionFormSubmit);
@@ -60,7 +76,6 @@ public class AddExcursion extends AppCompatActivity {
             excursionStartDateText = excursionStartDate.getText().toString();
             excursionEndDate = findViewById(R.id.excursionEditTextEndDate);
             excursionEndDateText = excursionEndDate.getText().toString();
-            excursionVacationID.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
 
             if (dateValidator.isValid(excursionStartDateText) && dateValidator.isValid(excursionEndDateText)) {
                 try {
@@ -71,7 +86,7 @@ public class AddExcursion extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "The start date must be before the end date", Toast.LENGTH_SHORT).show();
                     } else {
                         Repository repo = new Repository(getApplication());
-                        Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, excursionVacationIDInt);
+                        Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, selectedVacationID);
                         repo.insert(excursion);
 
                         Intent intent = new Intent(AddExcursion.this, Excursions.class);
@@ -84,9 +99,5 @@ public class AddExcursion extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please use the correct date format", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-         parent.getItemAtPosition(pos);
     }
 }
