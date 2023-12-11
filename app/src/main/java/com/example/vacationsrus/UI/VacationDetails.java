@@ -66,11 +66,21 @@ public class VacationDetails extends AppCompatActivity {
 
         Button vacationsDetailsDeleteButton = findViewById(R.id.buttonDetailsDelete);
         vacationsDetailsDeleteButton.setOnClickListener(view -> {
-            Vacation vacation = repository.getVacationByID(vacationID);
-            repository.delete(vacation);
-            Toast.makeText(getApplicationContext(), "Vacation deleted", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(VacationDetails.this, Vacations.class);
-            startActivity(intent);
+            repository.getmAllExcursionsForVacation(vacationID).observe(VacationDetails.this, new Observer<List<Excursion>>() {
+                public void onChanged(List<Excursion> excursions) {
+                    if (excursions != null && excursions.size() > 0) {
+                        // There are associated excursions
+                        Toast.makeText(getApplicationContext(), "You cannot delete a vacation with excursions", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // No associated excursions, proceed with deletion
+                        Vacation vacation = repository.getVacationByID(vacationID);
+                        repository.delete(vacation);
+                        Toast.makeText(getApplicationContext(), "Vacation deleted", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(VacationDetails.this, Vacations.class);
+                        startActivity(intent);
+                    }
+                }
+            });
         });
 
         RecyclerView recyclerView = findViewById(R.id.excursionsForVacationRecyclerView);
