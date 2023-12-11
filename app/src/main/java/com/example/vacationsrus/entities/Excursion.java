@@ -1,15 +1,21 @@
 package com.example.vacationsrus.entities;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "excursions")
 public class Excursion {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name="excursionID")
     private int excursionID;
+    @ColumnInfo(name="excursionTitle")
     private String excursionTitle;
+    @ColumnInfo(name="excursionStartDate")
     private String excursionStartDate;
+    @ColumnInfo(name="excursionEndDate")
     private String excursionEndDate;
+    @ColumnInfo(name="vacationID")
     private int vacationID;
 
     public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int vacationID) {

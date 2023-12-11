@@ -6,10 +6,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.vacationsrus.R;
-import com.example.vacationsrus.dao.VacationDAO;
+import com.example.vacationsrus.dao.ExcursionDAO;
 import com.example.vacationsrus.database.Repository;
+import com.example.vacationsrus.entities.Excursion;
 import com.example.vacationsrus.entities.Vacation;
+
+import java.util.List;
 
 public class VacationDetails extends AppCompatActivity {
     String vacationTitle;
@@ -22,8 +29,8 @@ public class VacationDetails extends AppCompatActivity {
     EditText editHotel;
     EditText editStartDate;
     EditText editEndDate;
-    Repository repository;
-    VacationDAO vacationDAO;
+    Repository repository = new Repository(getApplication());
+    ExcursionDAO excursionDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +39,6 @@ public class VacationDetails extends AppCompatActivity {
 
         vacationTitle = getIntent().getStringExtra("title");
         vacationID = getIntent().getIntExtra("id", 1);
-        System.out.println(vacationID);
         vacationHotel = getIntent().getStringExtra("hotel");
         vacationStartDate = getIntent().getStringExtra("startDate");
         vacationEndDate = getIntent().getStringExtra("endDate");
@@ -47,7 +53,6 @@ public class VacationDetails extends AppCompatActivity {
 
         Button vacationsDetailsSaveButton = findViewById(R.id.buttonDetailsSave);
         vacationsDetailsSaveButton.setOnClickListener(view -> {
-            repository = new Repository(getApplication());
             Vacation vacation = repository.getVacationByID(vacationID);
             vacation.setVacationTitle(editTitle.getText().toString());
             vacation.setVacationHotel(editHotel.getText().toString());
@@ -61,7 +66,6 @@ public class VacationDetails extends AppCompatActivity {
 
         Button vacationsDetailsDeleteButton = findViewById(R.id.buttonDetailsDelete);
         vacationsDetailsDeleteButton.setOnClickListener(view -> {
-            repository = new Repository(getApplication());
             Vacation vacation = repository.getVacationByID(vacationID);
             repository.delete(vacation);
             Toast.makeText(getApplicationContext(), "Vacation deleted", Toast.LENGTH_SHORT).show();
@@ -69,6 +73,30 @@ public class VacationDetails extends AppCompatActivity {
             startActivity(intent);
         });
 
+        RecyclerView recyclerView = findViewById(R.id.excursionsForVacationRecyclerView);
+        final ExcurionsForVacationsAdapter excurionsForVacationsAdapter = new ExcurionsForVacationsAdapter(this);
+        repository.getmAllExcursionsForVacation(vacationID).observe(VacationDetails.this, new Observer<List<Excursion>>() {
+            public void onChanged(List<Excursion> excursions) {
+                excurionsForVacationsAdapter.setExcursionsForVacations(excursions);
+            }
+        });
+        recyclerView.setAdapter(excurionsForVacationsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        final ExcurionsForVacationsAdapter excurionsForVacationsAdapter = new ExcurionsForVacationsAdapter(this);
+        RecyclerView recyclerView = findViewById(R.id.excursionsForVacationRecyclerView);
+        repository.getmAllExcursionsForVacation(vacationID).observe(VacationDetails.this, new Observer<List<Excursion>>() {
+            public void onChanged(List<Excursion> excursions) {
+                excurionsForVacationsAdapter.setExcursionsForVacations(excursions);
+            }
+        });
+        recyclerView.setAdapter(excurionsForVacationsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
 
