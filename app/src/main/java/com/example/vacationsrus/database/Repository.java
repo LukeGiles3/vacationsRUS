@@ -22,6 +22,7 @@ public class Repository {
     private LiveData<List<String>> mAllVacationTitles;
     private int mVacationID;
     private LiveData<List<Excursion>> mExcursionsForVacations;
+    private Excursion mOneExcursion;
 
     private static int NUMBER_OF_THREADS=4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -186,5 +187,19 @@ public class Repository {
         }
 
         return mExcursionsForVacations;
+    }
+
+    public Excursion getExcursionByID(int excursionID) {
+        databaseExecutor.execute(()->{
+            mOneExcursion = mExcursionDAO.getExcursionByID(excursionID);
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mOneExcursion;
     }
 }
