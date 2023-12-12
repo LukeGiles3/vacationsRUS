@@ -34,4 +34,8 @@ public interface VacationDAO {
 
     @Query("SELECT vacationID FROM VACATIONS WHERE vacationTitle = :title")
     int getVacationIDByTitle(String title);
+    @Query("SELECT vacationStartDate FROM VACATIONS WHERE vacationID = :selectedVacationID")
+    String getVacationStartDate(int selectedVacationID);
+    @Query("SELECT vacationEndDate FROM VACATIONS WHERE vacationID = :selectedVacationID")
+    String getVacationEndDate(int selectedVacationID);
 }

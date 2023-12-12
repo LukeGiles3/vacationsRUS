@@ -23,6 +23,8 @@ public class Repository {
     private int mVacationID;
     private LiveData<List<Excursion>> mExcursionsForVacations;
     private Excursion mOneExcursion;
+    private String mOneVacationStartDate;
+    private String mOneVacationEndDate;
 
     private static int NUMBER_OF_THREADS=4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -201,5 +203,33 @@ public class Repository {
         }
 
         return mOneExcursion;
+    }
+
+    public String getVacationStartDate(int selectedVacationID) {
+        databaseExecutor.execute(()->{
+            mOneVacationStartDate = mVacationDAO.getVacationStartDate(selectedVacationID);
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mOneVacationStartDate;
+    }
+
+    public String getVacationEndDate(int selectedVacationID) {
+        databaseExecutor.execute(()->{
+            mOneVacationEndDate = mVacationDAO.getVacationEndDate(selectedVacationID);
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mOneVacationEndDate;
     }
 }

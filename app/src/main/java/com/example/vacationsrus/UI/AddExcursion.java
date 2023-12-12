@@ -36,6 +36,10 @@ public class AddExcursion extends AppCompatActivity {
     int selectedVacationID;
     Date excursionStartDateDate;
     Date excursionEndDateDate;
+    String vacationStartDateText;
+    String vacationEndDateText;
+    Date vacationStartDateDate;
+    Date vacationEndDateDate;
     DateValidator dateValidator;
     Repository repository;
 
@@ -61,6 +65,8 @@ public class AddExcursion extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedVacationTitle = parentView.getItemAtPosition(position).toString();
                 selectedVacationID = repository.getVacationIdByTitle(selectedVacationTitle);
+                vacationStartDateText = repository.getVacationStartDate(selectedVacationID);
+                vacationEndDateText = repository.getVacationEndDate(selectedVacationID);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
@@ -81,19 +87,25 @@ public class AddExcursion extends AppCompatActivity {
                 try {
                     excursionStartDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(excursionStartDateText);
                     excursionEndDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(excursionEndDateText);
+                    vacationStartDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(vacationStartDateText);
+                    vacationEndDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(vacationEndDateText);
 
                     if (excursionStartDateDate.compareTo(excursionEndDateDate) > 0) {
                         Toast.makeText(getApplicationContext(), "The start date must be before the end date", Toast.LENGTH_SHORT).show();
                     } else {
-                        Repository repo = new Repository(getApplication());
-                        Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, selectedVacationID);
-                        repo.insert(excursion);
+                        if (excursionStartDateDate.compareTo(vacationStartDateDate) <= 0 || excursionEndDateDate.compareTo(vacationEndDateDate) >= 0) {
+                            Toast.makeText(getApplicationContext(), "Excursion dates must be within the selected vacation's dates", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Repository repo = new Repository(getApplication());
+                            Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, selectedVacationID);
+                            repo.insert(excursion);
 
-                        Intent intent = new Intent(AddExcursion.this, Excursions.class);
-                        startActivity(intent);
+                            Intent intent = new Intent(AddExcursion.this, Excursions.class);
+                            startActivity(intent);
+                        }
                     }
                 } catch (ParseException e) {
-
+                    e.printStackTrace();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "Please use the correct date format", Toast.LENGTH_SHORT).show();
