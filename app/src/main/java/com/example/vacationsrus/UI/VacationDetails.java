@@ -1,11 +1,24 @@
 package com.example.vacationsrus.UI;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +42,9 @@ public class VacationDetails extends AppCompatActivity {
     EditText editHotel;
     EditText editStartDate;
     EditText editEndDate;
+    Switch reminderSwitch;
+    private static final String CHANNEL_ID = "my_channel";
+    private static final int NOTIFICATION_ID = 1;
     Repository repository = new Repository(getApplication());
     ExcursionDAO excursionDAO;
 
@@ -92,7 +108,41 @@ public class VacationDetails extends AppCompatActivity {
         });
         recyclerView.setAdapter(excurionsForVacationsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+//        createNotificationChannel();
+//
+//        reminderSwitch = findViewById(R.id.vacationDetailsSwitch);
+//        reminderSwitch.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+//            if(isChecked) {
+//                Intent intent = new Intent(this, MainActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.notification_icon)
+//                        .setContentTitle("My Notification Title")
+//                        .setContentText("Notification Content")
+//                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                        .setContentIntent(pendingIntent)
+//                        .setAutoCancel(true);
+//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//                notificationManager.notify(NOTIFICATION_ID, builder.build());
+//            }
+//        }));
     }
+//    private void createNotificationChannel() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = "My Channel";
+//            String description = "My Notification Channel";
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//    }
 
     @Override
     protected void onResume() {
