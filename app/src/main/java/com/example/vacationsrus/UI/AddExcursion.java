@@ -97,7 +97,7 @@ public class AddExcursion extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Excursion dates must be within the selected vacation's dates", Toast.LENGTH_SHORT).show();
                         } else {
                             Repository repo = new Repository(getApplication());
-                            Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, selectedVacationID);
+                            Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, selectedVacationID, false);
                             repo.insert(excursion);
 
                             Intent intent = new Intent(AddExcursion.this, Excursions.class);

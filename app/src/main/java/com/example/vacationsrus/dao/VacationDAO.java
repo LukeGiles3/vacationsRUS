@@ -38,4 +38,6 @@ public interface VacationDAO {
     String getVacationStartDate(int selectedVacationID);
     @Query("SELECT vacationEndDate FROM VACATIONS WHERE vacationID = :selectedVacationID")
     String getVacationEndDate(int selectedVacationID);
+    @Query("SELECT vacationReminderState FROM VACATIONS WHERE vacationID = :vacationID")
+    boolean getVacationReminderState(int vacationID);
 }

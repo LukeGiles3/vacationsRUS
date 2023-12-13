@@ -1,34 +1,26 @@
 package com.example.vacationsrus.UI;
 
-import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vacationsrus.R;
-import com.example.vacationsrus.dao.ExcursionDAO;
 import com.example.vacationsrus.database.Repository;
 import com.example.vacationsrus.entities.Excursion;
 import com.example.vacationsrus.entities.Vacation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class VacationDetails extends AppCompatActivity {
@@ -37,16 +29,13 @@ public class VacationDetails extends AppCompatActivity {
     int vacationID;
     String vacationStartDate;
     String vacationEndDate;
-    int excursionID;
+    boolean vacationReminderState;
     EditText editTitle;
     EditText editHotel;
     EditText editStartDate;
     EditText editEndDate;
     Switch reminderSwitch;
-    private static final String CHANNEL_ID = "my_channel";
-    private static final int NOTIFICATION_ID = 1;
     Repository repository = new Repository(getApplication());
-    ExcursionDAO excursionDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +55,18 @@ public class VacationDetails extends AppCompatActivity {
         editStartDate.setText(vacationStartDate);
         editEndDate = findViewById(R.id.editTextEndDate1);
         editEndDate.setText(vacationEndDate);
+        reminderSwitch = findViewById(R.id.vacationDetailsSwitch);
+        reminderSwitch.setChecked(repository.getVacationReminderState(vacationID));
+        reminderSwitch.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+            if (isChecked) {
+                vacationReminderState = true;
+                reminderSwitch.setChecked(true);
+                setReminders();
+            } else {
+                vacationReminderState = false;
+                reminderSwitch.setChecked(false);
+            }
+        }));
 
         Button vacationsDetailsSaveButton = findViewById(R.id.buttonDetailsSave);
         vacationsDetailsSaveButton.setOnClickListener(view -> {
@@ -74,6 +75,7 @@ public class VacationDetails extends AppCompatActivity {
             vacation.setVacationHotel(editHotel.getText().toString());
             vacation.setVacationStartDate(editStartDate.getText().toString());
             vacation.setVacationEndDate(editEndDate.getText().toString());
+            vacation.setVacationReminderState(vacationReminderState);
             repository.update(vacation);
             Toast.makeText(getApplicationContext(), "Vacation updated", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(VacationDetails.this, Vacations.class);
@@ -85,10 +87,8 @@ public class VacationDetails extends AppCompatActivity {
             repository.getmAllExcursionsForVacation(vacationID).observe(VacationDetails.this, new Observer<List<Excursion>>() {
                 public void onChanged(List<Excursion> excursions) {
                     if (excursions != null && excursions.size() > 0) {
-                        // There are associated excursions
                         Toast.makeText(getApplicationContext(), "You cannot delete a vacation with excursions", Toast.LENGTH_SHORT).show();
                     } else {
-                        // No associated excursions, proceed with deletion
                         Vacation vacation = repository.getVacationByID(vacationID);
                         repository.delete(vacation);
                         Toast.makeText(getApplicationContext(), "Vacation deleted", Toast.LENGTH_SHORT).show();
@@ -109,41 +109,33 @@ public class VacationDetails extends AppCompatActivity {
         recyclerView.setAdapter(excurionsForVacationsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        createNotificationChannel();
-//
-//        reminderSwitch = findViewById(R.id.vacationDetailsSwitch);
-//        reminderSwitch.setOnCheckedChangeListener(((buttonView, isChecked) -> {
-//            if(isChecked) {
-//                Intent intent = new Intent(this, MainActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-//                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                        .setSmallIcon(R.drawable.notification_icon)
-//                        .setContentTitle("My Notification Title")
-//                        .setContentText("Notification Content")
-//                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                        .setContentIntent(pendingIntent)
-//                        .setAutoCancel(true);
-//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-//                    return;
-//                }
-//                notificationManager.notify(NOTIFICATION_ID, builder.build());
-//            }
-//        }));
     }
-//    private void createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            CharSequence name = "My Channel";
-//            String description = "My Notification Channel";
-//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//            channel.setDescription(description);
-//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//    }
 
+    private void setReminders() {
+        Calendar todayCalendar = Calendar.getInstance();
+        Date today = todayCalendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate = dateFormat.parse(vacationStartDate);
+            Date endDate = dateFormat.parse(vacationEndDate);
+            if (isSameDay(today, startDate)) {
+                Toast.makeText(getApplicationContext(), "Your trip is starting today!", Toast.LENGTH_SHORT).show();
+            }
+            if (isSameDay(today, endDate)) {
+                Toast.makeText(getApplicationContext(), "Your trip is ending today!", Toast.LENGTH_SHORT).show();            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
     @Override
     protected void onResume() {
 

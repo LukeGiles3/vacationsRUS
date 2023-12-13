@@ -52,9 +52,9 @@ public class Vacations extends AppCompatActivity {
 
         if (item.getItemId() == R.id.addSampleVacations) {
             Repository repo = new Repository(getApplication());
-            Vacation vacation = new Vacation("Bahamas", "Bahamas Hotel", "2025-02-03", "2025-03-04", 1);
+            Vacation vacation = new Vacation("Bahamas", "Bahamas Hotel", "2025-02-03", "2025-03-04", 1, false);
             repo.insert(vacation);
-            vacation = new Vacation( "Mexico", "Mexico Hotel", "2024-01-02", "2024-02-03", 2);
+            vacation = new Vacation( "Mexico", "Mexico Hotel", "2024-01-02", "2024-02-03", 2, false);
             repo.insert(vacation);
             List<Vacation> allVacations = repository.getmAllVacations();
             RecyclerView recyclerView = findViewById(R.id.vacationRecyclerView);

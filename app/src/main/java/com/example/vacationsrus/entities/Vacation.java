@@ -12,60 +12,57 @@ public class Vacation {
     private String vacationStartDate;
     private String vacationEndDate;
     private int excursionID;
+    private boolean vacationReminderState;
 
-    public Vacation(String vacationTitle, String vacationHotel, String vacationStartDate, String vacationEndDate, int excursionID) {
+    public Vacation(String vacationTitle, String vacationHotel, String vacationStartDate, String vacationEndDate, int excursionID, boolean vacationReminderState) {
         this.vacationTitle = vacationTitle;
         this.vacationHotel = vacationHotel;
         this.vacationStartDate = vacationStartDate;
         this.vacationEndDate = vacationEndDate;
         this.excursionID = excursionID;
+        this.vacationReminderState = false;
     }
 
     public int getVacationID() {
         return vacationID;
     }
-
     public void setVacationID(int vacationID) {
         this.vacationID = vacationID;
     }
-
     public String getVacationTitle() {
         return vacationTitle;
     }
-
     public void setVacationTitle(String vacationTitle) {
         this.vacationTitle = vacationTitle;
     }
-
     public String getVacationHotel() {
         return vacationHotel;
     }
-
     public void setVacationHotel(String vacationHotel) {
         this.vacationHotel = vacationHotel;
     }
-
     public String getVacationStartDate() {
         return vacationStartDate;
     }
-
     public void setVacationStartDate(String vacationStartDate) {
         this.vacationStartDate = vacationStartDate;
     }
-
     public String getVacationEndDate() {
         return vacationEndDate;
     }
-
     public void setVacationEndDate(String vacationEndDate) {
         this.vacationEndDate = vacationEndDate;
     }
-
     public int getExcursionID() {
         return excursionID;
     }
-
     public void setExcursionID(int excursionID) {
         this.excursionID = excursionID;
+    }
+    public boolean getVacationReminderState() {
+        return vacationReminderState;
+    }
+    public void setVacationReminderState(boolean vacationReminderState) {
+        this.vacationReminderState = vacationReminderState;
     }
 }

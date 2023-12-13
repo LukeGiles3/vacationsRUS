@@ -17,12 +17,14 @@ public class Excursion {
     private String excursionEndDate;
     @ColumnInfo(name="vacationID")
     private int vacationID;
+    private boolean excursionReminderState;
 
-    public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int vacationID) {
+    public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int vacationID, boolean excursionReminderState) {
         this.excursionTitle = excursionTitle;
         this.excursionStartDate = excursionStartDate;
         this.excursionEndDate = excursionEndDate;
         this.vacationID = vacationID;
+        this.excursionReminderState = false;
     }
 
     public int getExcursionID() {
@@ -63,5 +65,13 @@ public class Excursion {
 
     public void setVacationID(int vacationID) {
         this.vacationID = vacationID;
+    }
+
+    public boolean getExcursionReminderState() {
+        return excursionReminderState;
+    }
+
+    public void setExcursionReminderState(boolean excursionReminderState) {
+        this.excursionReminderState = excursionReminderState;
     }
 }

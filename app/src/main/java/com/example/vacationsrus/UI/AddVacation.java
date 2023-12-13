@@ -59,7 +59,7 @@ public class AddVacation extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "The start date must be before the end date", Toast.LENGTH_SHORT).show();
                     } else {
                         Repository repo = new Repository(getApplication());
-                        Vacation vacation = new Vacation(vacationTitleText, vacationHotelText, vacationStartDateText, vacationEndDateText, 1);
+                        Vacation vacation = new Vacation(vacationTitleText, vacationHotelText, vacationStartDateText, vacationEndDateText, 1, false);
                         repo.insert(vacation);
 
                         Intent intent = new Intent(AddVacation.this, Vacations.class);
