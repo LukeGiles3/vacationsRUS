@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,19 +19,23 @@ import com.example.vacationsrus.database.Repository;
 import com.example.vacationsrus.entities.Excursion;
 import com.example.vacationsrus.entities.Vacation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ExcursionDetails extends AppCompatActivity {
     String excursionTitle;
-    String excursionStartDate;
-    String excursionEndDate;
+    String excursionDate;
     int excursionVacation;
     int excursionID;
     EditText editTitle;
-    EditText editStartDate;
-    EditText editEndDate;
+    EditText editDate;
     Spinner excursionVacationID;
     int selectedVacationID;
+    boolean excursionReminderState;
+    Switch reminderSwitch;
     Repository repository = new Repository(getApplication());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +64,33 @@ public class ExcursionDetails extends AppCompatActivity {
         });
 
         excursionTitle = getIntent().getStringExtra("title");
-        excursionStartDate = getIntent().getStringExtra("startDate");
-        excursionEndDate = getIntent().getStringExtra("endDate");
+        excursionDate = getIntent().getStringExtra("startDate");
         excursionID = getIntent().getIntExtra("id", 1);
         excursionVacation = getIntent().getIntExtra("vacationID", 1);
         editTitle = findViewById(R.id.editTextExcursionDetailsTitle);
         editTitle.setText(excursionTitle);
-        editStartDate = findViewById(R.id.editTextStartDateExcursionDetails);
-        editStartDate.setText(excursionStartDate);
-        editEndDate = findViewById(R.id.editTextEndDateExcursionDetails);
-        editEndDate.setText(excursionEndDate);
+        editDate = findViewById(R.id.editTextStartDateExcursionDetails);
+        editDate.setText(excursionDate);
+        reminderSwitch = findViewById(R.id.excursionDetailsSwitch);
+        reminderSwitch.setChecked(repository.getExcursionReminderState(excursionID));
+        reminderSwitch.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+            if (isChecked) {
+                excursionReminderState = true;
+                reminderSwitch.setChecked(true);
+                setReminders();
+            } else {
+                excursionReminderState = false;
+                reminderSwitch.setChecked(false);
+            }
+        }));
 
         Button excursionsDetailsSaveButton = findViewById(R.id.buttonExcursionDetailsSave);
         excursionsDetailsSaveButton.setOnClickListener(view -> {
             Excursion excursion = repository.getExcursionByID(excursionID);
             excursion.setExcursionTitle(editTitle.getText().toString());
-            excursion.setExcursionStartDate(editStartDate.getText().toString());
-            excursion.setExcursionEndDate(editEndDate.getText().toString());
+            excursion.setExcursionDate(editDate.getText().toString());
             excursion.setVacationID(selectedVacationID);
+            excursion.setExcursionReminderState(excursionReminderState);
             repository.update(excursion);
             Toast.makeText(getApplicationContext(), "Excursion updated", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(ExcursionDetails.this, Excursions.class);
@@ -91,5 +105,27 @@ public class ExcursionDetails extends AppCompatActivity {
             Intent intent = new Intent(ExcursionDetails.this, Excursions.class);
             startActivity(intent);
         });
+    }
+    private void setReminders() {
+        Calendar todayCalendar = Calendar.getInstance();
+        Date today = todayCalendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate = dateFormat.parse(excursionDate);
+            if (isSameDay(today, startDate)) {
+                Toast.makeText(getApplicationContext(), "Your excursion is starting today!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
     }
 }

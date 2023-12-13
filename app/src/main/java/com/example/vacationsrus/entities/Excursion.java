@@ -11,18 +11,15 @@ public class Excursion {
     private int excursionID;
     @ColumnInfo(name="excursionTitle")
     private String excursionTitle;
-    @ColumnInfo(name="excursionStartDate")
-    private String excursionStartDate;
-    @ColumnInfo(name="excursionEndDate")
-    private String excursionEndDate;
+    @ColumnInfo(name="excursionDate")
+    private String excursionDate;
     @ColumnInfo(name="vacationID")
     private int vacationID;
     private boolean excursionReminderState;
 
-    public Excursion(String excursionTitle, String excursionStartDate, String excursionEndDate, int vacationID, boolean excursionReminderState) {
+    public Excursion(String excursionTitle, String excursionDate, int vacationID, boolean excursionReminderState) {
         this.excursionTitle = excursionTitle;
-        this.excursionStartDate = excursionStartDate;
-        this.excursionEndDate = excursionEndDate;
+        this.excursionDate = excursionDate;
         this.vacationID = vacationID;
         this.excursionReminderState = false;
     }
@@ -43,20 +40,12 @@ public class Excursion {
         this.excursionTitle = excursionTitle;
     }
 
-    public String getExcursionStartDate() {
-        return excursionStartDate;
+    public String getExcursionDate() {
+        return excursionDate;
     }
 
-    public void setExcursionStartDate(String excursionStartDate) {
-        this.excursionStartDate = excursionStartDate;
-    }
-
-    public String getExcursionEndDate() {
-        return excursionEndDate;
-    }
-
-    public void setExcursionEndDate(String excursionEndDate) {
-        this.excursionEndDate = excursionEndDate;
+    public void setExcursionDate(String excursionDate) {
+        this.excursionDate = excursionDate;
     }
 
     public int getVacationID() {

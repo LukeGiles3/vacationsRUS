@@ -27,15 +27,12 @@ import java.util.List;
 
 public class AddExcursion extends AppCompatActivity {
     EditText excursionTitle;
-    EditText excursionStartDate;
-    EditText excursionEndDate;
+    EditText excursionDate;
     Spinner excursionVacationID;
     String excursionTitleText;
-    String excursionStartDateText;
-    String excursionEndDateText;
+    String excursionDateText;
     int selectedVacationID;
-    Date excursionStartDateDate;
-    Date excursionEndDateDate;
+    Date excursionDateDate;
     String vacationStartDateText;
     String vacationEndDateText;
     Date vacationStartDateDate;
@@ -78,32 +75,25 @@ public class AddExcursion extends AppCompatActivity {
         excursionSubmitButton.setOnClickListener(view -> {
             excursionTitle = findViewById(R.id.excursionEditTextTitle);
             excursionTitleText = excursionTitle.getText().toString();
-            excursionStartDate = findViewById(R.id.excursionEditTextStartDate);
-            excursionStartDateText = excursionStartDate.getText().toString();
-            excursionEndDate = findViewById(R.id.excursionEditTextEndDate);
-            excursionEndDateText = excursionEndDate.getText().toString();
+            excursionDate = findViewById(R.id.excursionEditTextStartDate);
+            excursionDateText = excursionDate.getText().toString();
 
-            if (dateValidator.isValid(excursionStartDateText) && dateValidator.isValid(excursionEndDateText)) {
+            if (dateValidator.isValid(excursionDateText)) {
                 try {
-                    excursionStartDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(excursionStartDateText);
-                    excursionEndDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(excursionEndDateText);
+                    excursionDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(excursionDateText);
                     vacationStartDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(vacationStartDateText);
                     vacationEndDateDate = new SimpleDateFormat("yyyy-MM-dd").parse(vacationEndDateText);
 
-                    if (excursionStartDateDate.compareTo(excursionEndDateDate) > 0) {
-                        Toast.makeText(getApplicationContext(), "The start date must be before the end date", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (excursionStartDateDate.compareTo(vacationStartDateDate) <= 0 || excursionEndDateDate.compareTo(vacationEndDateDate) >= 0) {
-                            Toast.makeText(getApplicationContext(), "Excursion dates must be within the selected vacation's dates", Toast.LENGTH_SHORT).show();
+                        if (excursionDateDate.compareTo(vacationStartDateDate) < 0 || excursionDateDate.compareTo(vacationEndDateDate) > 0) {
+                            Toast.makeText(getApplicationContext(), "Excursion date must be within the selected vacation's dates", Toast.LENGTH_SHORT).show();
                         } else {
                             Repository repo = new Repository(getApplication());
-                            Excursion excursion = new Excursion(excursionTitleText, excursionStartDateText, excursionEndDateText, selectedVacationID, false);
+                            Excursion excursion = new Excursion(excursionTitleText, excursionDateText, selectedVacationID, false);
                             repo.insert(excursion);
 
                             Intent intent = new Intent(AddExcursion.this, Excursions.class);
                             startActivity(intent);
                         }
-                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

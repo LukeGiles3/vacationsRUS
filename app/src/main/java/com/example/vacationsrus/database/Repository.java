@@ -26,6 +26,7 @@ public class Repository {
     private String mOneVacationStartDate;
     private String mOneVacationEndDate;
     private boolean mVacationReminderState;
+    private boolean mExcursionReminderState;
 
     private static int NUMBER_OF_THREADS=4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -246,5 +247,19 @@ public class Repository {
         }
 
         return mVacationReminderState;
+    }
+
+    public boolean getExcursionReminderState(int excursionID) {
+        databaseExecutor.execute(()->{
+            mExcursionReminderState = mExcursionDAO.getExcursionReminderState(excursionID);
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mExcursionReminderState;
     }
 }

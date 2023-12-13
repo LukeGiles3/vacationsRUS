@@ -30,4 +30,7 @@ public interface ExcursionDAO {
 
     @Query("SELECT * FROM EXCURSIONS WHERE excursionID = :id")
     Excursion getExcursionByID(int id);
+
+    @Query("SELECT excursionReminderState FROM EXCURSIONS WHERE excursionID = :excursionID")
+    boolean getExcursionReminderState(int excursionID);
 }
