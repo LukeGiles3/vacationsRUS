@@ -2,6 +2,8 @@ package com.example.vacationsrus.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -135,6 +137,32 @@ public class VacationDetails extends AppCompatActivity {
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
                 cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.shareVacation) {
+            Vacation vacation = repository.getVacationByID(vacationID);
+            String shareContent = "Vacation Details:\n\n" +
+                    "Title: " + vacation.getVacationTitle() + "\n" +
+                    "Hotel: " + vacation.getVacationHotel() + "\n" +
+                    "Start Date: " + vacation.getVacationStartDate() + "\n" +
+                    "End Date: " + vacation.getVacationEndDate();
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
+            startActivity(Intent.createChooser(shareIntent, "Share via"));
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
     @Override
     protected void onResume() {
